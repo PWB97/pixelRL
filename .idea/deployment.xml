@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="puwenbo@120.79.62.21:6000" autoUploadExternalChanges="true">
+    <serverData>
+      <paths name="puwenbo@10.254.230.10:22">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/puwenbo/PycharmProjects/PixelRL" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="puwenbo@120.79.62.21:6000">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/puwenbo/puwenbo/PycharmProjects/pixelRL-reg" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
