@@ -122,7 +122,7 @@ class PixelWiseA3C_InnerState(agent.AttributeSavingMixin, agent.AsyncAgent):
         self.average_entropy = 0
 
 #######################
-        self.shared_model.to_gpu()
+        # self.shared_model.to_gpu()
         chainerrl.distribution.CategoricalDistribution.mylog_prob = mylog_prob
         chainerrl.distribution.CategoricalDistribution.myentropy = myentropy
 #######################
@@ -229,11 +229,12 @@ class PixelWiseA3C_InnerState(agent.AttributeSavingMixin, agent.AsyncAgent):
 
     def act_and_train(self, state, reward):
 #########################
-        #statevar = self.batch_states([state], np, self.phi)
-        statevar = chainer.cuda.to_gpu(state)
+        # statevar = self.batch_states([state], np, self.phi)
+        # statevar = chainer.cuda.to_gpu(state)
+        statevar = state
 
-        #self.past_rewards[self.t - 1] = reward
-        self.past_rewards[self.t - 1] = chainer.cuda.to_gpu(reward)
+        self.past_rewards[self.t - 1] = reward
+        # self.past_rewards[self.t - 1] = chainer.cuda.to_gpu(reward)
 ##########################
 
         if self.t - self.t_start == self.t_max:
@@ -269,33 +270,38 @@ class PixelWiseA3C_InnerState(agent.AttributeSavingMixin, agent.AsyncAgent):
 #############################
             #(float(pout.entropy.data[0]) - self.average_entropy))
         #return action
-        return chainer.cuda.to_cpu(action), chainer.cuda.to_cpu(inner_state.data)
+        # return chainer.cuda.to_cpu(action), chainer.cuda.to_cpu(inner_state.data)
+        return action, inner_state.data
 #############################
 
     def act(self, obs):
         # Use the process-local model for acting
         with chainer.no_backprop_mode():
 #########################
-            #statevar = self.batch_states([obs], np, self.phi)
-            statevar = chainer.cuda.to_gpu(obs)
+            # statevar = self.batch_states([obs], np, self.phi)
+            # statevar = chainer.cuda.to_gpu(obs)
+            statevar = obs
             pout, _, inner_state = self.model.pi_and_v(statevar)
             if self.act_deterministically:
                 #return pout.most_probable.data[0]
-                return chainer.cuda.to_cpu(pout.most_probable.data), chainer.cuda.to_cpu(inner_state.data)
+                # return chainer.cuda.to_cpu(pout.most_probable.data), chainer.cuda.to_cpu(inner_state.data)
+                return pout.most_probable.data, inner_state.data
             else:
                 #return pout.sample().data[0]
-                return chainer.cuda.to_cpu(pout.sample().data), chainer.cuda.to_cpu(inner_state.data)
+                # return chainer.cuda.to_cpu(pout.sample().data), chainer.cuda.to_cpu(inner_state.data)
+                return pout.sample().data, inner_state.data
 #########################
 
     def stop_episode_and_train(self, state, reward, done=False):
 #########################
-        #self.past_rewards[self.t - 1] = reward
-        self.past_rewards[self.t - 1] = chainer.cuda.to_gpu(reward)
+        self.past_rewards[self.t - 1] = reward
+        # self.past_rewards[self.t - 1] = chainer.cuda.to_gpu(reward)
         if done:
             self.update(None)
         else:
             #statevar = self.batch_states([state], np, self.phi)
-            statevar = chainer.cuda.to_gpu(state)
+            # statevar = chainer.cuda.to_gpu(state)
+            statevar = state
 ########################
             self.update(statevar)
 

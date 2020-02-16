@@ -4,32 +4,35 @@ import math
 def get_m(act, arg):
     [i, j, k] = arg
     type = act[i, j, k]
-    a = i
-    b = j
+    a = j
+    b = k
     # right
     if type == 1:
-        a = i + 1
-        b = j
+        a = j + 1
+        b = k
     # left
     if type == 2:
-        a = i - 1
-        b = j
+        a = j - 1
+        b = k
     # up
     if type == 3:
-        a = i
-        b = j + 1
+        a = j
+        b = k + 1
     # down
     if type == 4:
-        a = i
-        b = j - 1
-    # rotate
-    if type == 5:
-        a = int(i * math.cos(1 / 180 * math.pi) + j * math.sin(1 / 180 * math.pi))
-        b = int(j * math.cos(1 / 180 * math.pi) - i * math.sin(1 / 180 * math.pi))
-    # -rotate
-    if type == 6:
-        a = int(i * math.cos(-1 / 180 * math.pi) + j * math.sin(-1 / 180 * math.pi))
-        b = int(j * math.cos(-1 / 180 * math.pi) - i * math.sin(-1 / 180 * math.pi))
+        a = j
+        b = k - 1
+    # # rotate
+    # if type == 5:
+    #     print('rotate')
+    #     print(j, k)
+    #     print(a, b)
+    #     a = int(j * math.cos(1 / 180 * math.pi) + k * math.sin(1 / 180 * math.pi))
+    #     b = int(k * math.cos(1 / 180 * math.pi) - j * math.sin(1 / 180 * math.pi))
+    # # -rotate
+    # if type == 6:
+    #     a = int(j * math.cos(-1 / 180 * math.pi) + k * math.sin(-1 / 180 * math.pi))
+    #     b = int(k * math.cos(-1 / 180 * math.pi) - j * math.sin(-1 / 180 * math.pi))
     return a, b
 
 class State():
@@ -57,20 +60,22 @@ class State():
             # point
             for j in range(0, h):
                 for k in range(0, w):
-                    if self.warp_image[i, 0, j, k] > 0:
-                        a, b = get_m(act, [i, j, k])
-                        a = w-1 if (a > w-1) else a
-                        b = w-1 if (b > w-1) else b
-                        if act[i, j, k] == 7:
-                            tmp_img[i, 0, a, b] = self.warp_image[i, 0, j, k] + 1
-                        elif act[i, j, k] == 8:
-                            tmp_img[i, 0, a, b] = self.warp_image[i, 0, j, k] - 1
-                        elif act[i, j, k] == 9:
-                            tmp_img[i, 0, a, b] = self.warp_image[i, 0, j, k] + 10
-                        elif act[i, j, k] == 10:
-                            tmp_img[i, 0, a, b] = self.warp_image[i, 0, j, k] - 10
-                        else:
-                            tmp_img[i, 0, a, b] = self.warp_image[i, 0, j, k]
+                    # if self.warp_image[i, 0, j, k] > 0:
+                    a, b = get_m(act, [i, j, k])
+                    a = min(a, w-1)
+                    a = max(0, a)
+                    b = min(b, w-1)
+                    b= max(0, b)
+                    if act[i, j, k] == 5:
+                        tmp_img[i, 0, a, b] = self.warp_image[i, 0, j, k] + 1.0/255
+                    if act[i, j, k] == 6:
+                        tmp_img[i, 0, a, b] = self.warp_image[i, 0, j, k] - 1.0/255
+                    if act[i, j, k] == 7:
+                        tmp_img[i, 0, a, b] = self.warp_image[i, 0, j, k] + 10.0/255
+                    if act[i, j, k] == 8:
+                        tmp_img[i, 0, a, b] = self.warp_image[i, 0, j, k] - 10.0/255
+                    else:
+                        tmp_img[i, 0, a, b] = self.warp_image[i, 0, j, k]
             # todo interpo
 
 
